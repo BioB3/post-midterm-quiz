@@ -100,3 +100,15 @@ class Table:
     def __str__(self):
         return self.table_name + ':' + str(self.table)
 
+myDB = DB()
+movies = []
+with open(os.path.join(__location__, 'movies.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        movies.append(dict(r))
+table1 = Table('movies', movies)
+myDB.insert(table1)
+mytable1 = myDB.search('movies')
+mytable1_filtered = mytable1.filter(lambda x: x["Genre"] == "Comedy")
+print("average value of Worldwide Gross for Comedy movies")
+print(mytable1_filtered.aggregate(lambda x: sum(x)/len(x), "Worldwide Gross"))
